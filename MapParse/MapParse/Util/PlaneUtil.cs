@@ -50,5 +50,31 @@ namespace MapParse.Util
 			intersection = ((b.Normal.Cross(c.Normal) * -a.Distance) - (c.Normal.Cross(a.Normal) * b.Distance) - (a.Normal.Cross(b.Normal) * c.Distance)) / denom;
 			return true;
 		}
+		
+		public bool GetIntersection(Plane p, Vec3 start, Vec3 end, ref Vertex intersection, ref float percentage)
+		{
+			Vec3 direction = end - start;
+			float num, denom;
+			
+			direction.Normalize();
+			
+			denom = p.Normal.Dot(direction);
+			
+			if (Math.Abs(denom) < Constants.Epsilon)
+			{
+				return false;
+			}
+			
+			num = -DistanceToPlane(p, start);
+			percentage = num / denom;
+			intersection = new Vertex(start + (direction * percentage));
+			percentage = percentage / (end - start).Magnitude();
+			return true;
+		}
+		
+		public override string ToString()
+		{
+			return this.Normal.ToString() + ", " + this.Distance.ToString();
+		}
 	}
 }
