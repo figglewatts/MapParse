@@ -42,7 +42,13 @@ namespace MapParse.Util
 		// based on "Intersection of 3 Planes" http://geomalgorithms.com/a05-_intersect-1.html
 		public bool GetIntersection(Plane a, Plane b, Plane c, ref Vec3 intersection)
 		{
-			float denom = 
+			float denom = a.Normal.Dot(b.Normal.Cross(c.Normal));
+			if (Math.Abs(denom) < Constants.Epsilon)
+			{
+				return false;
+			}
+			intersection = ((b.Normal.Cross(c.Normal) * -a.Distance) - (c.Normal.Cross(a.Normal) * b.Distance) - (a.Normal.Cross(b.Normal) * c.Distance)) / denom;
+			return true;
 		}
 	}
 }
