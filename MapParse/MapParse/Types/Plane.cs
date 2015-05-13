@@ -11,7 +11,6 @@ namespace MapParse.Types
 		public Plane()
 		{
 			this.Normal = new Vec3();
-			this.Distance = 0;
 		}
 
 		public Plane(Vec3 n, float d)
