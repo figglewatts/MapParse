@@ -13,7 +13,12 @@ namespace MapParse.Util
 			return p;
 		}
 		
-		// Calculate the distance to a plane from a vec3
+		/// <summary>
+		/// Calculate the distance to a plane from a Vec3
+		/// </summary>
+		/// <param name="a">The plane.</param>
+		/// <param name="b">The Vec3</param>
+		/// <returns>The distance to the plane from the point.</returns>
 		public static float DistanceToPlane(Plane a, Vec3 b)
 		{
 			return (float)(ParseUtils.RoundToSignificantDigits(a.Normal.Dot(b), 5) 
@@ -38,8 +43,10 @@ namespace MapParse.Util
 			}
 		}
 		
-		// calculate the point of intersection of this plane and 2 others
-		// based on "Intersection of 3 Planes" http://geomalgorithms.com/a05-_intersect-1.html
+		/// <summary>
+		/// Calculate the point of intersection of 3 planes
+		/// based on "Intersection of 3 Planes" http://geomalgorithms.com/a05-_intersect-1.html
+		/// </summary>
 		public bool GetIntersection(Plane a, Plane b, Plane c, ref Vec3 intersection)
 		{
 			float denom = a.Normal.Dot(b.Normal.Cross(c.Normal));
@@ -50,7 +57,7 @@ namespace MapParse.Util
 			intersection = ((b.Normal.Cross(c.Normal) * -a.Distance) - (c.Normal.Cross(a.Normal) * b.Distance) - (a.Normal.Cross(b.Normal) * c.Distance)) / denom;
 			return true;
 		}
-		
+
 		public bool GetIntersection(Plane p, Vec3 start, Vec3 end, ref Vertex intersection, ref float percentage)
 		{
 			Vec3 direction = end - start;
