@@ -47,7 +47,7 @@ namespace MapParse.Util
 		/// Calculate the point of intersection of 3 planes
 		/// based on "Intersection of 3 Planes" http://geomalgorithms.com/a05-_intersect-1.html
 		/// </summary>
-		public bool GetIntersection(Plane a, Plane b, Plane c, ref Vec3 intersection)
+		public static bool GetIntersection(Plane a, Plane b, Plane c, ref Vec3 intersection)
 		{
 			float denom = a.Normal.Dot(b.Normal.Cross(c.Normal));
 			if (Math.Abs(denom) < Constants.Epsilon)
@@ -58,7 +58,7 @@ namespace MapParse.Util
 			return true;
 		}
 
-		public bool GetIntersection(Plane p, Vec3 start, Vec3 end, ref Vertex intersection, ref float percentage)
+		public static bool GetIntersection(Plane p, Vec3 start, Vec3 end, ref Vertex intersection, ref float percentage)
 		{
 			Vec3 direction = end - start;
 			float num, denom;
