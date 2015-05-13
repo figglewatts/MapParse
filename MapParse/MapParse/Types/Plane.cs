@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MapParse.Types
 {
-	public class Plane
+	public struct Plane
 	{
 		public Vec3 Normal;
 		public float Distance = 0;
