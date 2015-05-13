@@ -49,7 +49,7 @@ namespace MapParse.Types
 		
 		public float Magnitude()
 		{
-			return Math.Sqrt(this.X * this.X + this.Y * this.Y + this.Z * this.Z);
+			return (float)Math.Sqrt(this.X * this.X + this.Y * this.Y + this.Z * this.Z);
 		}
 
 		public static Vec3 operator+ (Vec3 a, Vec3 b)
@@ -69,6 +69,15 @@ namespace MapParse.Types
 		public static Vec3 operator* (Vec3 a, int b)
 		{
 			return new Vec3(a.X * b, a.Y * b, a.Z * b);
+		}
+
+		public static Vec3 operator/ (Vec3 a, float b)
+		{
+			return new Vec3(a.X / b, a.Y / b, a.Z / b);
+		}
+		public static Vec3 operator/ (Vec3 a, int b)
+		{
+			return new Vec3(a.X / b, a.Y / b, a.Z / b);
 		}
 	}
 }

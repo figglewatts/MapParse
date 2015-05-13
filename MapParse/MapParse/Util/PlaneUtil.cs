@@ -16,8 +16,8 @@ namespace MapParse.Util
 		// Calculate the distance to a plane from a vec3
 		public static float DistanceToPlane(Plane a, Vec3 b)
 		{
-			return (float)(ParseUtil.RoundToSignificantDigits(a.Normal.Dot(b), 5) 
-				+ ParseUtil.RoundToSignificantDigits(a.Distance, 5));
+			return (float)(ParseUtils.RoundToSignificantDigits(a.Normal.Dot(b), 5) 
+				+ ParseUtils.RoundToSignificantDigits(a.Distance, 5));
 		}
 		
 		// Calculate whether a point is in front of, behind, or on a plane
@@ -70,11 +70,6 @@ namespace MapParse.Util
 			intersection = new Vertex(start + (direction * percentage));
 			percentage = percentage / (end - start).Magnitude();
 			return true;
-		}
-		
-		public override string ToString()
-		{
-			return this.Normal.ToString() + ", " + this.Distance.ToString();
 		}
 	}
 }
