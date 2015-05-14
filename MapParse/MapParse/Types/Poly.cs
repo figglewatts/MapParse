@@ -9,7 +9,13 @@ namespace MapParse.Types
 		public DynamicArray<Vertex> Verts { get; set; }
 		public Plane P { get; set; }
 		
-		// TODO: implement NumberOfVertices
+		public int NumberOfVertices
+		{
+			get
+			{
+				return Verts.Length;
+			}
+		}
 		
 		/// <summary>
 		/// Creates a Poly with a set number of vertices.
@@ -59,11 +65,6 @@ namespace MapParse.Types
 				}
 			}
 			return false;
-		}
-		
-		public override bool Equals(object obj)
-		{
-			return obj == this;
 		}
 		
 		public static bool operator!= (Poly a, Poly b)

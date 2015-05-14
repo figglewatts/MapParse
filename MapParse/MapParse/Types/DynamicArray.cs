@@ -16,11 +16,11 @@ namespace MapParse.Types
 			}
 		}
 		
-		public DynamicArray<T>()
+		public DynamicArray()
 		{
-			this.Elements = new T[];
+			this.Elements = new T[0];
 		}
-		public DynamicArray<T>(int length)
+		public DynamicArray(int length)
 		{
 			this.Elements = new T[length];
 		}
