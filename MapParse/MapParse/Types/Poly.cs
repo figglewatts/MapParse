@@ -6,7 +6,7 @@ namespace MapParse.Types
 {
 	public struct Poly
 	{
-		public Vertex[] Verts { get; set; }
+		public DynamicArray<Vertex> Verts { get; set; }
 		public Plane P { get; set; }
 		
 		// TODO: implement NumberOfVertices
@@ -16,7 +16,7 @@ namespace MapParse.Types
 		/// </summary>
 		public Poly(int numberOfVertices)
 		{
-			this.Verts = new Vertex[numberOfVertices];
+			this.Verts = new DynamicArray<Vertex>();
 			P = PlaneUtil.CreatePlane();
 		}
 		/// <summary>
@@ -24,7 +24,7 @@ namespace MapParse.Types
 		/// </summary>
 		public Poly(int numberOfVertices, Plane p)
 		{
-			this.Verts = new Vertex[numberOfVertices];
+			this.Verts = new DynamicArray<Vertex>();
 			P = p;
 		}
 		
