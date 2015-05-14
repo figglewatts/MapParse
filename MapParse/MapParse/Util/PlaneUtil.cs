@@ -62,7 +62,7 @@ namespace MapParse.Util
 		{
 			Vec3 direction = end - start;
 			float num, denom;
-			
+
 			direction.Normalize();
 			
 			denom = p.Normal.Dot(direction);
