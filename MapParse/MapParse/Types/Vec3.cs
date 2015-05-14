@@ -79,5 +79,33 @@ namespace MapParse.Types
 		{
 			return new Vec3(a.X / b, a.Y / b, a.Z / b);
 		}
+		
+		public static bool operator== (Vec3 a, Vec3 b)
+		{
+			if (a.X == b.X)
+			{
+				if (a.Y == b.Y)
+				{
+					if (a.Z == b.Z)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		public override bool Equals(object obj)
+		{
+			return obj == this;
+		}
+		
+		public static bool operator!= (Vec3 a, Vec3 b)
+		{
+			if (a == b)
+			{
+				return false;
+			}
+			return true;
+		}
 	}
 }
