@@ -9,7 +9,13 @@ namespace MapParse.Types
 		public DynamicArray<Vertex> Verts { get; set; }
 		public Plane P { get; set; }
 		
-		// TODO: implement NumberOfVertices
+		public int NumberOfVertices
+		{
+			get
+			{
+				return Verts.Length;
+			}
+		}
 		
 		/// <summary>
 		/// Creates a Poly with a set number of vertices.
