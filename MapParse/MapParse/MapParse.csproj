@@ -39,12 +39,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Types\Brush.cs" />
+    <Compile Include="Types\DynamicArray.cs" />
+    <Compile Include="Types\Entity.cs" />
     <Compile Include="Types\Face.cs" />
     <Compile Include="Types\Plane.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\PointClassification.cs" />
+    <Compile Include="Types\Poly.cs" />
+    <Compile Include="Types\PolyClassification.cs" />
     <Compile Include="Types\Vec3.cs" />
+    <Compile Include="Types\Vertex.cs" />
+    <Compile Include="Util\BrushUtil.cs" />
     <Compile Include="Util\Constants.cs" />
+    <Compile Include="Util\ParseUtil.cs" />
+    <Compile Include="Util\PlaneUtil.cs" />
+    <Compile Include="Util\PolyUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
