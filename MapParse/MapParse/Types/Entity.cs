@@ -21,14 +21,16 @@ namespace MapParse.Types
 		public string GetPropertyValue(string propertyName)
 		{
 			// TODO: implement this method
+			return null;
 		}
 		
 		/// <summary>
 		/// Gets a property's value from it's name, and returns true if it found the property.
 		/// </summary>
-		public bool GetPropertyValue(string propertyName, ref propertyValue)
+		public bool GetPropertyValue(string propertyName, ref string propertyValue)
 		{
 			// TODO: implement this method
+			return false;
 		}
 		
 		public Entity()

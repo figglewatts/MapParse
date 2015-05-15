@@ -97,8 +97,8 @@ namespace MapParse.Util
 		public static void CalculateAABB(ref Brush b)
 		{
 			// use these as default values for max and min
-			min = b.Faces[0].Polys[0].Verts[0].P;
-			max = b.Faces[0].Polys[0].Verts[0].P;
+			Vec3 min = b.Faces[0].Polys[0].Verts[0].P;
+			Vec3 max = b.Faces[0].Polys[0].Verts[0].P;
 			
 			// iterate the brush's faces
 			for (int fI = 0; fI < b.NumberOfFaces; fI++)
@@ -107,7 +107,7 @@ namespace MapParse.Util
 				for (int pI = 0; pI < b.Faces[fI].Polys.Length; pI++)
 				{
 					// iterate the poly's vertices
-					for (int vI = 0; vI < b.Faces[fI].Polys[pI].Verts.NumberOfVertices; vI++)
+					for (int vI = 0; vI < b.Faces[fI].Polys[pI].NumberOfVertices; vI++)
 					{
 						Vertex vert = b.Faces[fI].Polys[pI].Verts[vI];
 						
