@@ -26,7 +26,7 @@ namespace MapParse.Types
 		/// <summary>
 		/// Gets a property's value from it's name, and returns true if it found the property.
 		/// </summary>
-		public bool GetPropertyValue(string propertyName, ref string propertyValue)
+		public bool GetPropertyValue(string propertyName, out string propertyValue)
 		{
 			return Properties.TryGetValue(propertyName, out propertyValue);
 		}

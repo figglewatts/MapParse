@@ -43,7 +43,7 @@ namespace MapParse.Util
 			return PolyClassification.ON_PLANE;
 		}
 		
-		public static void SplitPoly(Poly poly, ref Poly front, ref Poly back)
+		public static void SplitPoly(Poly poly, out Poly front, out Poly back)
 		{
 			PointClassification[] pointClassification = new PointClassification[poly.NumberOfVertices];
 			
@@ -54,25 +54,25 @@ namespace MapParse.Util
 			}
 			
 			// build fragments
-			Poly _front = new Poly();
-			Poly _back = new Poly();
+			front = new Poly();
+			back = new Poly();
 			
-			_front.P = poly.P;
-			_back.P = poly.P;
+			front.P = poly.P;
+			back.P = poly.P;
 			for (int i = 0; i < poly.NumberOfVertices; i++)
 			{
 				// add point to appropriate list
 				switch (pointClassification[i])
 				{
 					case PointClassification.FRONT:
-						_front.Verts.Add(poly.Verts[i]);
+						front.Verts.Add(poly.Verts[i]);
 						break;
 					case PointClassification.BACK:
-						_back.Verts.Add(poly.Verts[i]);
+						back.Verts.Add(poly.Verts[i]);
 						break;
 					case PointClassification.ON_PLANE:
-						_front.Verts.Add(poly.Verts[i]);
-						_back.Verts.Add(poly.Verts[i]);
+						front.Verts.Add(poly.Verts[i]);
+						back.Verts.Add(poly.Verts[i]);
 						break;
 				}
 				
@@ -97,21 +97,21 @@ namespace MapParse.Util
 				if (!ignore && pointClassification[i] != pointClassification[iNext])
 				{
 					Vertex v = new Vertex(); // new vertex created by the split
-					float p = 0; // percentage between 2 vertices
+					float p; // percentage between 2 vertices
 					
-					PlaneUtil.GetIntersection(poly.P, poly.Verts[i].P, poly.Verts[iNext].P, ref v, ref p);
+					PlaneUtil.GetIntersection(poly.P, poly.Verts[i].P, poly.Verts[iNext].P, out v, out p);
 					v.Tex[0] = poly.Verts[iNext].Tex[0] - poly.Verts[i].Tex[0];
 					v.Tex[1] = poly.Verts[iNext].Tex[1] - poly.Verts[i].Tex[1];
 					v.Tex[0] = poly.Verts[i].Tex[0] + (p * v.Tex[0]);
 					v.Tex[1] = poly.Verts[i].Tex[1] + (p * v.Tex[1]);
 					
-					_front.Verts.Add(v);
-					_back.Verts.Add(v);
+					front.Verts.Add(v);
+					back.Verts.Add(v);
 				}
 			}
 			
-			CalculatePlane(ref _front);
-			CalculatePlane(ref _back);
+			CalculatePlane(ref front);
+			CalculatePlane(ref back);
 		}
 		
 		public static bool CalculatePlane(ref Poly poly)

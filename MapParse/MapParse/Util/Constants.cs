@@ -8,6 +8,6 @@ namespace MapParse.Util
 {
 	public static class Constants
 	{
-		public static const double Epsilon = 1e-5;
+		public const double Epsilon = 1e-5;
 	}
 }

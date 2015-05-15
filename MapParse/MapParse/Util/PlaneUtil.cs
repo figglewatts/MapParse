@@ -7,7 +7,7 @@ namespace MapParse.Util
 	{
 		public static Plane CreatePlane()
 		{
-			Plane p;
+			Plane p = new Plane();
 			p.Normal = new Vec3();
 			p.Distance = 0;
 			return p;
@@ -47,18 +47,19 @@ namespace MapParse.Util
 		/// Calculate the point of intersection of 3 planes
 		/// based on "Intersection of 3 Planes" http://geomalgorithms.com/a05-_intersect-1.html
 		/// </summary>
-		public static bool GetIntersection(Plane a, Plane b, Plane c, ref Vec3 intersection)
+		public static bool GetIntersection(Plane a, Plane b, Plane c, out Vec3 intersection)
 		{
 			float denom = a.Normal.Dot(b.Normal.Cross(c.Normal));
 			if (Math.Abs(denom) < Constants.Epsilon)
 			{
+				intersection = new Vec3();
 				return false;
 			}
 			intersection = ((b.Normal.Cross(c.Normal) * -a.Distance) - (c.Normal.Cross(a.Normal) * b.Distance) - (a.Normal.Cross(b.Normal) * c.Distance)) / denom;
 			return true;
 		}
 
-		public static bool GetIntersection(Plane p, Vec3 start, Vec3 end, ref Vertex intersection, ref float percentage)
+		public static bool GetIntersection(Plane p, Vec3 start, Vec3 end, out Vertex intersection, out float percentage)
 		{
 			Vec3 direction = end - start;
 			float num, denom;
@@ -69,6 +70,8 @@ namespace MapParse.Util
 			
 			if (Math.Abs(denom) < Constants.Epsilon)
 			{
+				percentage = 0F;
+				intersection = new Vertex(new Vec3());
 				return false;
 			}
 			

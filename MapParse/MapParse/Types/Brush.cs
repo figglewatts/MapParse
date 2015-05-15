@@ -2,7 +2,7 @@ using System;
 
 namespace MapParse.Types
 {
-	public struct Brush
+	public class Brush
 	{
 		public Vec3 Min { get; set; }
 		public Vec3 Max { get; set; }
@@ -41,13 +41,6 @@ namespace MapParse.Types
 			{
 				return Faces.Length;
 			}
-		}
-		
-		public Brush()
-		{
-			Min = new Vec3();
-			Max = new Vec3();
-			Faces = new DynamicArray<Face>();
 		}
 
 		public Brush(Brush b)

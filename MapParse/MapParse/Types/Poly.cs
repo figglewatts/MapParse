@@ -4,7 +4,7 @@ using MapParse.Util;
 
 namespace MapParse.Types
 {
-	public struct Poly
+	public class Poly
 	{
 		public DynamicArray<Vertex> Verts { get; set; }
 		public Plane P { get; set; }
@@ -37,6 +37,11 @@ namespace MapParse.Types
 		{
 			Verts = p.Verts;
 			P = p.P;
+		}
+		public Poly()
+		{
+			Verts = new DynamicArray<Vertex>();
+			P = new Plane();
 		}
 		
 		public static bool operator== (Poly a, Poly b)

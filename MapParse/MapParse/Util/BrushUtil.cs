@@ -42,8 +42,8 @@ namespace MapParse.Util
 			// make sure we're not processing 2 or 3 of the same face
 			if (brush.Faces[i] != brush.Faces[j] && brush.Faces[i] != brush.Faces[k] && brush.Faces[j] != brush.Faces[k])
 			{
-				Vec3 intersection = new Vec3();
-				if (PlaneUtil.GetIntersection(brush.Faces[i].P, brush.Faces[j].P, brush.Faces[k].P, ref intersection))
+				Vec3 intersection;
+				if (PlaneUtil.GetIntersection(brush.Faces[i].P, brush.Faces[j].P, brush.Faces[k].P, out intersection))
 				{
 					if (PointInsideBrush(brush, intersection))
 					{
