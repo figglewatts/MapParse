@@ -33,6 +33,11 @@ namespace MapParse.Types
 			this.Verts = new DynamicArray<Vertex>();
 			P = p;
 		}
+		public Poly(Poly p)
+		{
+			Verts = p.Verts;
+			P = p.P;
+		}
 		
 		public static bool operator== (Poly a, Poly b)
 		{
