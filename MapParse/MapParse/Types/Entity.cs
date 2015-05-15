@@ -20,8 +20,7 @@ namespace MapParse.Types
 		/// </summary>
 		public string GetPropertyValue(string propertyName)
 		{
-			// TODO: implement this method
-			return null;
+			return Properties[propertyName];
 		}
 		
 		/// <summary>
@@ -29,8 +28,15 @@ namespace MapParse.Types
 		/// </summary>
 		public bool GetPropertyValue(string propertyName, ref string propertyValue)
 		{
-			// TODO: implement this method
-			return false;
+			return Properties.TryGetValue(propertyName, out propertyValue);
+		}
+
+		/// <summary>
+		/// Add a property to this entity.
+		/// </summary>
+		public void AddProperty(string key, string val)
+		{
+			Properties.Add(key, val);
 		}
 		
 		public Entity()
