@@ -46,5 +46,26 @@ namespace MapParse.Types
 				this.Elements[index] = value;
 			}
 		}
+
+		public static bool operator== (DynamicArray<T> a, DynamicArray<T> b)
+		{
+			if (a.Length == b.Length)
+			{
+				if (a.Elements == b.Elements)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public static bool operator!= (DynamicArray<T> a, DynamicArray<T> b)
+		{
+			if (a == b)
+			{
+				return false;
+			}
+			return true;
+		}
 	}
 }
