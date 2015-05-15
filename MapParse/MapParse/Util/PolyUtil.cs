@@ -162,5 +162,13 @@ namespace MapParse.Util
 			poly.P.Distance = -(centerOfMass.Dot(poly.P.Normal));
 			return true;
 		}
+		
+		public static Poly CopyPoly(Poly poly)
+		{
+			Poly _poly = new Poly();
+			_poly.Verts = poly.Verts;
+			_poly.P = poly.P;
+			return _poly;
+		}
 	}
 }
