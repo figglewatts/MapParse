@@ -14,12 +14,10 @@ namespace MapParse.Types
 			this.Tex = new float[2];
 		}
 	
-		public static Vertex Create()
+		public Vertex(Vertex v)
 		{
-			Vertex v;
-			v.P = new Vec3();
-			v.Tex = new float[2];
-			return v;
+			this.P = v.P;
+			this.Tex = v.Tex;
 		}
 	}
 }
