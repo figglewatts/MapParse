@@ -8,7 +8,8 @@ namespace MapParse.Util
 	{
 		public static PolyClassification ClassifyPoly(Poly poly)
 		{
-			bool front, back = false;
+			bool front = false;
+			bool back = false;
 			float distance = 0;
 			
 			for (int i = 0; i < poly.NumberOfVertices; i++)
@@ -49,7 +50,7 @@ namespace MapParse.Util
 			// classify all points
 			for (int i = 0; i < poly.NumberOfVertices; i++)
 			{
-				pointClassification[i] = PlaneUtil.ClassifyPoint(poly.Verts[i].P);
+				pointClassification[i] = PlaneUtil.ClassifyPoint(poly.P, poly.Verts[i].P);
 			}
 			
 			// build fragments
@@ -95,10 +96,10 @@ namespace MapParse.Util
 				
 				if (!ignore && pointClassification[i] != pointClassification[iNext])
 				{
-					Vertex v = null; // new vertex created by the split
+					Vertex v = new Vertex(); // new vertex created by the split
 					float p = 0; // percentage between 2 vertices
 					
-					PlaneUtil.GetIntersection(poly.P, poly.Verts[i], poly.Verts[iNext], ref v, ref p);
+					PlaneUtil.GetIntersection(poly.P, poly.Verts[i].P, poly.Verts[iNext].P, ref v, ref p);
 					v.Tex[0] = poly.Verts[iNext].Tex[0] - poly.Verts[i].Tex[0];
 					v.Tex[1] = poly.Verts[iNext].Tex[1] - poly.Verts[i].Tex[1];
 					v.Tex[0] = poly.Verts[i].Tex[0] + (p * v.Tex[0]);
@@ -109,11 +110,11 @@ namespace MapParse.Util
 				}
 			}
 			
-			_front.CalculatePlane();
-			_back.CalculatePlane();
+			CalculatePlane(ref _front);
+			CalculatePlane(ref _back);
 		}
 		
-		public static bool CalculatePlane(Poly poly)
+		public static bool CalculatePlane(ref Poly poly)
 		{
 			Vec3 centerOfMass = new Vec3();
 			float magnitude;
@@ -125,9 +126,9 @@ namespace MapParse.Util
 				return false;
 			}
 			
-			poly.P.Normal = new Vec3();
+			//poly.P.Normal = new Vec3();
 			Vec3 normal = new Vec3();
-			for (int i = 0; i < poly.NumberOfVertices; i++)
+			for (i = 0; i < poly.NumberOfVertices; i++)
 			{
 				j = i+1;
 				if (j >= poly.NumberOfVertices)
@@ -138,7 +139,7 @@ namespace MapParse.Util
 				normal.Y = poly.P.Normal.Y + (poly.Verts[i].P.Z - poly.Verts[j].P.Z) * (poly.Verts[i].P.X + poly.Verts[j].P.X);
 				normal.Z = poly.P.Normal.Z + (poly.Verts[i].P.X - poly.Verts[j].P.X) * (poly.Verts[i].P.Y + poly.Verts[j].P.Y);
 				
-				poly.P.Normal = normal;
+				//poly.P.Normal = normal;
 				
 				centerOfMass.X += poly.Verts[i].P.X;
 				centerOfMass.Y += poly.Verts[i].P.Y;
@@ -155,11 +156,11 @@ namespace MapParse.Util
 			{
 				return false;
 			}
+			centerOfMass = centerOfMass / poly.NumberOfVertices;
+			poly.P = new Plane(normal, -(centerOfMass.Dot(poly.P.Normal)));
+
 			poly.P.Normal.Normalize();
 			
-			centerOfMass = centerOfMass / poly.NumberOfVertices;
-			
-			poly.P.Distance = -(centerOfMass.Dot(poly.P.Normal));
 			return true;
 		}
 		

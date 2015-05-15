@@ -67,11 +67,6 @@ namespace MapParse.Types
 			return false;
 		}
 		
-		public override bool Equals(object obj)
-		{
-			return obj == this;
-		}
-		
 		public static bool operator!= (Poly a, Poly b)
 		{
 			if (a == b)
