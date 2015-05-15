@@ -5,12 +5,18 @@ namespace MapParse.Types
 {
 	public struct Plane
 	{
-		public Vec3 Normal;
-		public float Distance = 0;
+		public Vec3 Normal { get; set; }
+		public float Distance { get; set; }
 
 		public Plane()
 		{
 			this.Normal = new Vec3();
+		}
+
+		public Plane(Plane p)
+		{
+			this.Normal = p.Normal;
+			this.Distance = p.Distance;
 		}
 
 		public Plane(Vec3 n, float d)
@@ -24,6 +30,27 @@ namespace MapParse.Types
 			this.Normal = (c - b).Cross(a - b);
 			this.Normal.Normalize();
 			this.Distance = -this.Normal.Dot(a);
+		}
+
+		public static bool operator== (Plane a, Plane b)
+		{
+			if (a.Normal == b.Normal)
+			{
+				if (a.Distance == b.Distance)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public static bool operator!= (Plane a, Plane b)
+		{
+			if (a == b)
+			{
+				return false;
+			}
+			return true;
 		}
 	}
 }
