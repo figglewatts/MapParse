@@ -11,6 +11,9 @@ namespace MapParse
 {
 	public static class MapParse
 	{
-		
+		public static MapFile Parse(string mapFileContents)
+		{
+			
+		}
 	}
 }
