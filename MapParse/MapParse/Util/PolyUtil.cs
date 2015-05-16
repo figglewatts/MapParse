@@ -126,7 +126,6 @@ namespace MapParse.Util
 				return false;
 			}
 			
-			//poly.P.Normal = new Vec3();
 			Vec3 normal = new Vec3();
 			for (i = 0; i < poly.NumberOfVertices; i++)
 			{
@@ -138,8 +137,6 @@ namespace MapParse.Util
 				normal.X = poly.P.Normal.X + (poly.Verts[i].P.Y - poly.Verts[j].P.Y) * (poly.Verts[i].P.Z + poly.Verts[j].P.Z);
 				normal.Y = poly.P.Normal.Y + (poly.Verts[i].P.Z - poly.Verts[j].P.Z) * (poly.Verts[i].P.X + poly.Verts[j].P.X);
 				normal.Z = poly.P.Normal.Z + (poly.Verts[i].P.X - poly.Verts[j].P.X) * (poly.Verts[i].P.Y + poly.Verts[j].P.Y);
-				
-				//poly.P.Normal = normal;
 				
 				centerOfMass.X += poly.Verts[i].P.X;
 				centerOfMass.Y += poly.Verts[i].P.Y;
