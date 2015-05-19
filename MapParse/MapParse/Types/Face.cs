@@ -12,6 +12,16 @@ namespace MapParse.Types
 		public float Rotation { get; set; }
 		public DynamicArray<Poly> Polys { get; set; }
 
+		public Face()
+		{
+			P = new Plane();
+			TexAxis = new Plane[2];
+			TexScale = new float[2];
+			Texture = "";
+			Rotation = 0F;
+			Polys = new DynamicArray<Poly>();
+		}
+
 		public Face(Face f)
 		{
 			TexAxis = f.TexAxis;
