@@ -113,6 +113,176 @@ namespace MapParse.Util
 			CalculatePlane(ref front);
 			CalculatePlane(ref back);
 		}
+
+		public static void CalculateTextureCoordinates(ref Poly p, int texWidth, int texHeight, Plane[] texAxis, float[] texScale)
+		{
+			// calculate poly UVs
+			for (int i = 0; i < p.NumberOfVertices; i++)
+			{
+				float u;
+				float v;
+				u = (((p.Verts[i].P.X * texAxis[0].Normal.X + p.Verts[i].P.Z * texAxis[0].Normal.Y + p.Verts[i].P.Y * texAxis[0].Normal.Z) / texWidth) / texScale[0]) + (texAxis[0].Distance / texWidth);
+				v = (((p.Verts[i].P.X * texAxis[1].Normal.X + p.Verts[i].P.Z * texAxis[1].Normal.Y + p.Verts[i].P.Y * texAxis[1].Normal.Z) / texWidth) / texScale[1]) + (texAxis[1].Distance / texWidth);
+				p.Verts[i].Tex[0] = u;
+				p.Verts[i].Tex[1] = v;
+			}
+
+			// check which axis should be normalized
+			bool doU = true;
+			bool doV = true;
+			for (int i = 0; i < p.NumberOfVertices; i++)
+			{
+				if (p.Verts[i].Tex[0] < 1 && p.Verts[i].Tex[0] > -1)
+				{
+					doU = false;
+				}
+				if (p.Verts[i].Tex[1] < 1 && p.Verts[i].Tex[1] > -1)
+				{
+					doV = false;
+				}
+			}
+
+			// calculate coordinate nearest to 0
+			if (doU || doV)
+			{
+				float nearestU = 0;
+				float u = p.Verts[0].Tex[0];
+				float nearestV = 0;
+				float v = p.Verts[0].Tex[1];
+
+				if (doU)
+				{
+					if (u > 1)
+					{
+						nearestU = (float)Math.Floor(u);
+					}
+					else
+					{
+						nearestU = (float)Math.Ceiling(u);
+					}
+				}
+				if (doV)
+				{
+					if (v > 1)
+					{
+						nearestU = (float)Math.Floor(v);
+					}
+					else
+					{
+						nearestU = (float)Math.Ceiling(v);
+					}
+				}
+
+				for (int i = 0; i < p.NumberOfVertices; i++)
+				{
+					if (doU)
+					{
+						u = p.Verts[i].Tex[0];
+						if (Math.Abs(u) < Math.Abs(nearestU))
+						{
+							if (u > 1)
+							{
+								nearestU = (float)Math.Floor(u);
+							}
+							else
+							{
+								nearestU = (float)Math.Ceiling(u);
+							}
+						}
+					}
+					if (doV)
+					{
+						v = p.Verts[i].Tex[1];
+						if (Math.Abs(v) < Math.Abs(nearestV))
+						{
+							if (v > 1)
+							{
+								nearestV = (float)Math.Floor(v);
+							}
+							else
+							{
+								nearestV = (float)Math.Ceiling(v);
+							}
+						}
+					}
+				}
+
+				// normalize texture coordinates
+				for (int i = 0; i < p.NumberOfVertices; i++)
+				{
+					p.Verts[i].Tex[0] = p.Verts[i].Tex[0] - nearestU;
+					p.Verts[i].Tex[1] = p.Verts[i].Tex[1] - nearestV;
+				}
+			}
+		}
+
+		public static void SortVerticesClockwise(ref Poly p)
+		{
+			// calculate center of polygon
+			Vec3 center = new Vec3();
+			for (int i = 0; i < p.NumberOfVertices; i++)
+			{
+				center += p.Verts[i].P;
+			}
+
+			center /= p.NumberOfVertices;
+
+			// sort vertices
+			for (int i = 0; i < p.NumberOfVertices - 2; i++)
+			{
+				Vec3 a = new Vec3();
+				Plane plane;
+				float smallestAngle = -1;
+				int smallest = -1;
+
+				a = p.Verts[i].P - center;
+				a.Normalize();
+
+				plane = new Plane(p.Verts[i].P, center, center + p.P.Normal);
+				for (int j = i + 1; j < p.NumberOfVertices; j++)
+				{
+					if (PlaneUtil.ClassifyPoint(plane, p.Verts[j].P) != PointClassification.BACK)
+					{
+						Vec3 b = new Vec3();
+						float angle;
+
+						b = p.Verts[j].P - center;
+						b.Normalize();
+
+						angle = a.Dot(b);
+
+						if (angle > smallestAngle)
+						{
+							smallestAngle = angle;
+							smallest = j;
+						}
+					}
+				}
+
+				if (smallest == -1)
+				{
+					// TODO: throw MalformedPolyException
+				}
+
+				Vertex t = p.Verts[smallest];
+				p.Verts[smallest] = p.Verts[i + 1];
+				p.Verts[i + 1] = t;
+			}
+
+			// check if vertex order needs to be reversed for back-facing polygon
+			Plane oldPlane = p.P;
+			CalculatePlane(ref p);
+			if (p.P.Normal.Dot(oldPlane.Normal) < 0)
+			{
+				int j = p.NumberOfVertices;
+				for (int i = 0; i < j / 2; i++)
+				{
+					Vertex v = p.Verts[i];
+					p.Verts[i] = p.Verts[j - i];
+					p.Verts[j - i] = v;
+				}
+			}
+		}
 		
 		public static bool CalculatePlane(ref Poly poly)
 		{
