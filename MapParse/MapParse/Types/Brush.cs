@@ -43,6 +43,13 @@ namespace MapParse.Types
 			}
 		}
 
+		public Brush()
+		{
+			Min = new Vec3();
+			Max = new Vec3();
+			Faces = new DynamicArray<Face>();
+		}
+
 		public Brush(Brush b)
 		{
 			Min = b.Min;
