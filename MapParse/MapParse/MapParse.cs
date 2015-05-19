@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,88 +13,409 @@ namespace MapParse
 {
 	public static class MapParse
 	{
-		private enum ParseState
+		private enum FaceParseState
 		{
-			FILE,
-			ENTITY,
-			PROPERTY_KEY,
-			PROPERTY_VAL,
-			BRUSH,
-			VEC3,
 			PLANE,
+			TEXTURE,
+			TEXAXIS,
+			ROTATION,
+			SCALEX,
+			SCALEY
+		}
 
+		private enum Vec3ParseState
+		{
+			X,
+			Y,
+			Z
+		}
+
+		private enum PlaneParseState
+		{
+			N_X, // x, y, and z values of the normal
+			N_Y,
+			N_Z,
+			DISTANCE
 		}
 		
 		private static StringBuilder sb = new StringBuilder();
 
-		private static ParseState state;
-		private static ParseState lastState;
+		private static int i = 0;
 		
-		public static MapFile Parse(string mapFileContents)
+		public static MapFile ParseMap(string pathToMapFile)
+		{
+			string contents = File.ReadAllText(pathToMapFile);
+			return ParseMapString(contents);
+		}
+
+		public static MapFile ParseMapString(string content)
 		{
 			MapFile map = new MapFile();
-			state = ParseState.FILE;
-			for (int i = 0; i < mapFileContents.Length; i++)
+			
+			int index = 0;
+			char token;
+			bool done = false;
+			while (!done)
 			{
-				setState(mapFileContents[i]);
+				token = content[index];
+				if (token == '{')
+				{
+					Entity entity = parseEntity(content, ref index);
+					map.Entities.Add(entity);
+				}
 
+				if (index == content.Length-1)
+				{
+					done = true;
+				}
 
+				index++;
 			}
+
+			return map;
 		}
 
-		private static void setState(char c)
+		private static Entity parseEntity(string content, ref int index)
 		{
-			// this is either the start of an entity or a brush
-			if (c == '{')
+			Entity entity = new Entity();
+			
+			bool done = false;
+			char token;
+			while (!done)
 			{
-				if (state == ParseState.FILE)
+				token = content[index];
+				
+				if (LookAhead(content, index) == '"')
 				{
-					// this is the start of an entity
-					updateState(ParseState.ENTITY);
+					Property p = parseProperty(content, ref index);
+					entity.AddProperty(p);
+				}
 
-				}
-				else if (state == ParseState.ENTITY)
+				if (LookAhead(content, index) == '{')
 				{
-					// this is the start of a brush
-					updateState(ParseState.BRUSH);
+					Brush b = parseBrush(content, ref index);
+					entity.Brushes.Add(b);
+				}
 
-				}
-			}
-			else if (c == '"')
-			{
-				if (state == ParseState.ENTITY)
+				if (LookAhead(content, index) == '}')
 				{
-					// property key
-					updateState(ParseState.PROPERTY_KEY);
+					done = true;
 				}
-				else if (state == ParseState.PROPERTY_KEY)
-				{
-					// property value
-					updateState(ParseState.PROPERTY_VAL);
-				}
+				index++;
 			}
-			else if (c == '(')
-			{
-				if (state == ParseState.BRUSH)
-				{
-					// vec3
-					updateState(ParseState.VEC3);
-				}
-			}
-			else if (c == '[')
-			{
-				if (state == ParseState.BRUSH)
-				{
-					// plane
-					updateState(ParseState.PLANE);
-				}
-			}
+
+			return entity;
 		}
 
-		private static void updateState(ParseState newState)
+		private static Property parseProperty(string content, ref int index)
 		{
-			lastState = state;
-			state = newState;
+			Property p = new Property();
+
+			bool done = false;
+			bool parsedKey = false;
+			bool parsing = false;
+			char token;
+			sb.Clear();
+			while (!done)
+			{
+				token = content[index];
+
+				if (!parsing)
+				{
+					if (LookAhead(content, index) == '"')
+					{
+						parsing = true;
+						sb.Clear();
+					}
+				}
+				else
+				{
+					sb.Append(token);
+					if (LookAhead(content, index) == '"')
+					{
+						parsing = false;
+						if (!parsedKey)
+						{
+							parsedKey = true;
+							p.Key = sb.ToString();
+							sb.Clear();
+						}
+						else
+						{
+							p.Value = sb.ToString();
+							done = true;
+						}
+					}
+				}
+				index++;
+			}
+			return p;
+		}
+
+		private static Brush parseBrush(string content, ref int index)
+		{
+			Brush b = new Brush();
+
+			bool done = false;
+			bool parsing = false;
+			char token;
+			while (!done)
+			{
+				token = content[index];
+
+				if (!parsing)
+				{
+					if (LookAhead(content, index) == '(')
+					{
+						parsing = true;
+					}
+					if (LookAhead(content, index) == '}')
+					{
+						done = true;
+					}
+				}
+				else
+				{
+					Face f = parseFace(content, ref index);
+					b.Faces.Add(f);
+					parsing = false;
+				}
+				index++;
+			}
+
+			BrushUtil.GeneratePolys(b);
+			for (int i = 0; i < b.NumberOfFaces; i++)
+			{
+				for (int j = 0; j < b.Faces[i].Polys.Length; j++)
+				{
+					Poly poly = b.Faces[i].Polys[j];
+					poly.P = b.Faces[i].P;
+					PolyUtil.SortVerticesClockwise(ref poly);
+					b.Faces[i].Polys[j] = poly;
+				}
+			}
+
+			BrushUtil.CalculateAABB(ref b);
+			return b;
+		}
+
+		private static Face parseFace(string content, ref int index)
+		{
+			Face f = new Face();
+			Vec3[] plane = new Vec3[3];
+			string texture = "";
+			Plane[] texAxis = new Plane[2];
+			float rotation = 0F;
+			float[] scale = new float[2];
+
+			FaceParseState state = FaceParseState.PLANE;
+			bool done = false;
+			char token;
+			while (!done)
+			{
+				token = content[index];
+
+				if (state == FaceParseState.PLANE)
+				{
+					for (int i = 0; i < 3; i++)
+					{
+						plane[i] = parseVec3(content, ref index);
+						if (i == 2)
+						{
+							// we're at the end of the plane definition, so get ready to parse the texture
+							state = FaceParseState.TEXTURE;
+							sb.Clear();
+						}
+					}
+				}
+				else if (state == FaceParseState.TEXTURE)
+				{
+					if (LookAhead(content, index) != ' ')
+					{
+						sb.Append(token);
+					}
+					else
+					{
+						// get ready to parse the texture axis
+						texture = sb.ToString();
+						sb.Clear();
+						state = FaceParseState.TEXAXIS;
+					}
+				}
+				else if (state == FaceParseState.TEXAXIS)
+				{
+					for (int i = 0; i < 2; i++)
+					{
+						texAxis[i] = parsePlane(content, ref index);
+						if (i == 1)
+						{
+							// get ready to parse texture rotation
+							state = FaceParseState.ROTATION;
+							sb.Clear();
+						}
+					}
+				}
+				else if (state == FaceParseState.ROTATION)
+				{
+					if (LookAhead(content, index) != ' ')
+					{
+						sb.Append(token);
+					}
+					else
+					{
+						rotation = float.Parse(sb.ToString());
+						sb.Clear();
+						state = FaceParseState.SCALEX;
+					}
+				}
+				else if (state == FaceParseState.SCALEX)
+				{
+					if (LookAhead(content, index) != ' ')
+					{
+						sb.Append(token);
+					}
+					else
+					{
+						scale[0] = float.Parse(sb.ToString());
+						sb.Clear();
+						state = FaceParseState.SCALEY;
+					}
+				}
+				else if (state == FaceParseState.SCALEY)
+				{
+					if (LookAhead(content, index) != ' ')
+					{
+						sb.Append(token);
+					}
+					else
+					{
+						scale[1] = float.Parse(sb.ToString());
+						sb.Clear();
+						done = true;
+					}
+				}
+
+				index++;
+			}
+
+			f.P = new Plane(plane[0], plane[1], plane[2]);
+			f.Texture = texture;
+			f.TexAxis = texAxis;
+			f.Rotation = rotation;
+			f.TexScale = scale;
+			return f;
+		}
+
+		private static Plane parsePlane(string content, ref int index)
+		{
+			Plane p = new Plane();
+
+			sb.Clear();
+
+			PlaneParseState state = PlaneParseState.N_X;
+			bool done = false;
+			bool parsing = true;
+			char token;
+			while (!done)
+			{
+				token = content[index];
+
+				if (!parsing)
+				{
+					if (LookAhead(content, index) == ']')
+					{
+						done = true;
+					}
+				}
+				else
+				{
+					if (LookAhead(content, index) != ' ')
+					{
+						sb.Append(token);
+					}
+					else
+					{
+						switch (state)
+						{
+							case PlaneParseState.N_X:
+								p.Normal.X = float.Parse(sb.ToString());
+								state = PlaneParseState.N_Y;
+								break;
+							case PlaneParseState.N_Y:
+								p.Normal.Y = float.Parse(sb.ToString());
+								state = PlaneParseState.N_Z;
+								break;
+							case PlaneParseState.N_Z:
+								p.Normal.Z = float.Parse(sb.ToString());
+								state = PlaneParseState.DISTANCE;
+								break;
+							case PlaneParseState.DISTANCE:
+								p.Distance = float.Parse(sb.ToString());
+								parsing = false;
+								break;
+						}
+					}
+				}
+				index++;
+			}
+			return p;
+		}
+
+		private static Vec3 parseVec3(string content, ref int index)
+		{
+			Vec3 vec3 = new Vec3();
+
+			sb.Clear();
+			
+			Vec3ParseState state = Vec3ParseState.X;
+			bool done = false;
+			bool parsing = true;
+			char token;
+			while (!done)
+			{
+				token = content[index];
+
+				if (!parsing)
+				{
+					if (LookAhead(content, index) == ')')
+					{
+						done = true;
+					}
+				}
+				else
+				{
+					if (LookAhead(content, index) != ' ')
+					{
+						sb.Append(token);
+					}
+					else
+					{
+						switch (state)
+						{
+							case Vec3ParseState.X:
+								vec3.X = float.Parse(sb.ToString());
+								state = Vec3ParseState.Y;
+								break;
+							case Vec3ParseState.Y:
+								vec3.Y = float.Parse(sb.ToString());
+								state = Vec3ParseState.Z;
+								break;
+							case Vec3ParseState.Z:
+								vec3.Z = float.Parse(sb.ToString());
+								parsing = false;
+								break;
+						}
+						sb.Clear();
+					}
+				}
+				index++;
+			}
+			return vec3;
+		}
+
+		private static char LookAhead(string content, int index)
+		{
+			return content[index+1];
 		}
 	}
 }
