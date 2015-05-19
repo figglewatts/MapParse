@@ -38,6 +38,10 @@ namespace MapParse.Types
 		{
 			Properties.Add(key, val);
 		}
+		public void AddProperty(Property p)
+		{
+			Properties.Add(p.Key, p.Value);
+		}
 		
 		public Entity()
 		{
