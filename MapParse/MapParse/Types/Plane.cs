@@ -6,7 +6,7 @@ namespace MapParse.Types
 	public class Plane
 	{
 		public Vec3 Normal { get; set; }
-		public float Distance { get; set; }
+		public double Distance { get; set; }
 
 		public Plane()
 		{
@@ -20,7 +20,7 @@ namespace MapParse.Types
 			this.Distance = p.Distance;
 		}
 
-		public Plane(Vec3 n, float d)
+		public Plane(Vec3 n, double d)
 		{
 			this.Normal = n;
 			this.Distance = d;

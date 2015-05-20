@@ -7,21 +7,21 @@ namespace MapParse.Types
 		public Vec3 Min { get; set; }
 		public Vec3 Max { get; set; }
 		public DynamicArray<Face> Faces { get; set; }
-		public float Width
+		public double Width
 		{
 			get
 			{
 				return Math.Abs((Max.X - Min.X)); // TODO: check this for bugs thoroughly
 			}
 		}
-		public float Height
+		public double Height
 		{
 			get
 			{
 				return Math.Abs((Max.Z - Min.Z));
 			}
 		}
-		public float Depth
+		public double Depth
 		{
 			get
 			{

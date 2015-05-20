@@ -1,5 +1,6 @@
 using System;
 
+using MapParse.Exceptions;
 using MapParse.Types;
 
 namespace MapParse.Util
@@ -10,7 +11,7 @@ namespace MapParse.Util
 		{
 			bool front = false;
 			bool back = false;
-			float distance = 0;
+			double distance = 0;
 			
 			for (int i = 0; i < poly.NumberOfVertices; i++)
 			{
@@ -97,7 +98,7 @@ namespace MapParse.Util
 				if (!ignore && pointClassification[i] != pointClassification[iNext])
 				{
 					Vertex v = new Vertex(); // new vertex created by the split
-					float p; // percentage between 2 vertices
+					double p; // percentage between 2 vertices
 					
 					PlaneUtil.GetIntersection(poly.P, poly.Verts[i].P, poly.Verts[iNext].P, out v, out p);
 					v.Tex[0] = poly.Verts[iNext].Tex[0] - poly.Verts[i].Tex[0];
@@ -119,8 +120,8 @@ namespace MapParse.Util
 			// calculate poly UVs
 			for (int i = 0; i < p.NumberOfVertices; i++)
 			{
-				float u;
-				float v;
+				double u;
+				double v;
 				u = (((p.Verts[i].P.X * texAxis[0].Normal.X + p.Verts[i].P.Z * texAxis[0].Normal.Y + p.Verts[i].P.Y * texAxis[0].Normal.Z) / texWidth) / texScale[0]) + (texAxis[0].Distance / texWidth);
 				v = (((p.Verts[i].P.X * texAxis[1].Normal.X + p.Verts[i].P.Z * texAxis[1].Normal.Y + p.Verts[i].P.Y * texAxis[1].Normal.Z) / texWidth) / texScale[1]) + (texAxis[1].Distance / texWidth);
 				p.Verts[i].Tex[0] = u;
@@ -145,31 +146,31 @@ namespace MapParse.Util
 			// calculate coordinate nearest to 0
 			if (doU || doV)
 			{
-				float nearestU = 0;
-				float u = p.Verts[0].Tex[0];
-				float nearestV = 0;
-				float v = p.Verts[0].Tex[1];
+				double nearestU = 0;
+				double u = p.Verts[0].Tex[0];
+				double nearestV = 0;
+				double v = p.Verts[0].Tex[1];
 
 				if (doU)
 				{
 					if (u > 1)
 					{
-						nearestU = (float)Math.Floor(u);
+						nearestU = Math.Floor(u);
 					}
 					else
 					{
-						nearestU = (float)Math.Ceiling(u);
+						nearestU = Math.Ceiling(u);
 					}
 				}
 				if (doV)
 				{
 					if (v > 1)
 					{
-						nearestU = (float)Math.Floor(v);
+						nearestU = Math.Floor(v);
 					}
 					else
 					{
-						nearestU = (float)Math.Ceiling(v);
+						nearestU = Math.Ceiling(v);
 					}
 				}
 
@@ -182,11 +183,11 @@ namespace MapParse.Util
 						{
 							if (u > 1)
 							{
-								nearestU = (float)Math.Floor(u);
+								nearestU = Math.Floor(u);
 							}
 							else
 							{
-								nearestU = (float)Math.Ceiling(u);
+								nearestU = Math.Ceiling(u);
 							}
 						}
 					}
@@ -197,11 +198,11 @@ namespace MapParse.Util
 						{
 							if (v > 1)
 							{
-								nearestV = (float)Math.Floor(v);
+								nearestV = Math.Floor(v);
 							}
 							else
 							{
-								nearestV = (float)Math.Ceiling(v);
+								nearestV = Math.Ceiling(v);
 							}
 						}
 					}
@@ -232,7 +233,7 @@ namespace MapParse.Util
 			{
 				Vec3 a = new Vec3();
 				Plane plane;
-				float smallestAngle = -1;
+				double smallestAngle = -1;
 				int smallest = -1;
 
 				a = p.Verts[i].P - center;
@@ -244,7 +245,7 @@ namespace MapParse.Util
 					if (PlaneUtil.ClassifyPoint(plane, p.Verts[j].P) != PointClassification.BACK)
 					{
 						Vec3 b = new Vec3();
-						float angle;
+						double angle;
 
 						b = p.Verts[j].P - center;
 						b.Normalize();
@@ -261,7 +262,7 @@ namespace MapParse.Util
 
 				if (smallest == -1)
 				{
-					// TODO: throw MalformedPolyException
+					throw new MalformedPolyException("The polygon is malformed, as it has less than 3 vertices.");
 				}
 
 				Vertex t = p.Verts[smallest];
@@ -274,7 +275,7 @@ namespace MapParse.Util
 			CalculatePlane(ref p);
 			if (p.P.Normal.Dot(oldPlane.Normal) < 0)
 			{
-				int j = p.NumberOfVertices;
+				int j = p.NumberOfVertices-1;
 				for (int i = 0; i < j / 2; i++)
 				{
 					Vertex v = p.Verts[i];
@@ -287,7 +288,7 @@ namespace MapParse.Util
 		public static bool CalculatePlane(ref Poly poly)
 		{
 			Vec3 centerOfMass = new Vec3();
-			float magnitude;
+			double magnitude;
 			int i, j;
 			
 			if (poly.NumberOfVertices < 3)

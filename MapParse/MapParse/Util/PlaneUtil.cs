@@ -19,16 +19,16 @@ namespace MapParse.Util
 		/// <param name="a">The plane.</param>
 		/// <param name="b">The Vec3</param>
 		/// <returns>The distance to the plane from the point.</returns>
-		public static float DistanceToPlane(Plane a, Vec3 b)
+		public static double DistanceToPlane(Plane a, Vec3 b)
 		{
-			return (float)(ParseUtils.RoundToSignificantDigits(a.Normal.Dot(b), 5) 
+			return (ParseUtils.RoundToSignificantDigits(a.Normal.Dot(b), 5) 
 				+ ParseUtils.RoundToSignificantDigits(a.Distance, 5));
 		}
 		
 		// Calculate whether a point is in front of, behind, or on a plane
 		public static PointClassification ClassifyPoint(Plane a, Vec3 b)
 		{
-			float distance = DistanceToPlane(a, b);
+			double distance = DistanceToPlane(a, b);
 			if (distance > Constants.Epsilon)
 			{
 				return PointClassification.FRONT;
@@ -49,20 +49,25 @@ namespace MapParse.Util
 		/// </summary>
 		public static bool GetIntersection(Plane a, Plane b, Plane c, out Vec3 intersection)
 		{
-			float denom = a.Normal.Dot(b.Normal.Cross(c.Normal));
+			double denom = a.Normal.Dot(b.Normal.Cross(c.Normal));
+
 			if (Math.Abs(denom) < Constants.Epsilon)
 			{
+				//Console.WriteLine("Denom was zero." + denom);
 				intersection = new Vec3();
 				return false;
 			}
-			intersection = ((b.Normal.Cross(c.Normal) * -a.Distance) - (c.Normal.Cross(a.Normal) * b.Distance) - (a.Normal.Cross(b.Normal) * c.Distance)) / denom;
-			return true;
+			else
+			{
+				intersection = (-(a.Distance * b.Normal.Cross(c.Normal)) - (b.Distance * c.Normal.Cross(a.Normal)) - (c.Distance * a.Normal.Cross(b.Normal))) / denom;
+				return true;
+			}
 		}
 
-		public static bool GetIntersection(Plane p, Vec3 start, Vec3 end, out Vertex intersection, out float percentage)
+		public static bool GetIntersection(Plane p, Vec3 start, Vec3 end, out Vertex intersection, out double percentage)
 		{
 			Vec3 direction = end - start;
-			float num, denom;
+			double num, denom;
 
 			direction.Normalize();
 			
