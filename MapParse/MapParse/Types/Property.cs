@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 
 namespace MapParse.Types
 {
-	public struct Property
+	public class Property
 	{
 		public string Key { get; set; }
 		public string Value { get; set; }
 
+		public Property()
+		{
+			Key = "";
+			Value = "";
+		}
+		
 		public Property(string k, string v)
 		{
 			Key = k;
