@@ -51,6 +51,7 @@ namespace MapParse.Util
 						brush.Faces[i].Polys[0].Verts.Add(v);
 						brush.Faces[j].Polys[0].Verts.Add(v);
 						brush.Faces[k].Polys[0].Verts.Add(v);
+						Console.WriteLine("Added vertices");
 					}
 				}
 			}
