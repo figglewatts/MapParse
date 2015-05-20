@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{333C6AB6-7E1D-4474-9159-9B7F11DD93CE}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{D4DA4504-31CC-48E9-8917-BF32B3586879}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MapParse</RootNamespace>
-    <AssemblyName>MapParse</AssemblyName>
+    <RootNamespace>MapParseTests</RootNamespace>
+    <AssemblyName>MapParseTests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -39,26 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\MalformedPolyException.cs" />
-    <Compile Include="MapParser.cs" />
-    <Compile Include="Types\Brush.cs" />
-    <Compile Include="Types\DynamicArray.cs" />
-    <Compile Include="Types\Entity.cs" />
-    <Compile Include="Types\Face.cs" />
-    <Compile Include="Types\MapFile.cs" />
-    <Compile Include="Types\Plane.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Types\PointClassification.cs" />
-    <Compile Include="Types\Poly.cs" />
-    <Compile Include="Types\PolyClassification.cs" />
-    <Compile Include="Types\Property.cs" />
-    <Compile Include="Types\Vec3.cs" />
-    <Compile Include="Types\Vertex.cs" />
-    <Compile Include="Util\BrushUtil.cs" />
-    <Compile Include="Util\Constants.cs" />
-    <Compile Include="Util\ParseUtil.cs" />
-    <Compile Include="Util\PlaneUtil.cs" />
-    <Compile Include="Util\PolyUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MapParse\MapParse.csproj">
+      <Project>{333c6ab6-7e1d-4474-9159-9b7f11dd93ce}</Project>
+      <Name>MapParse</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
