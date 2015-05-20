@@ -11,7 +11,7 @@ using MapParse.Util;
 
 namespace MapParse
 {
-	public static class MapParse
+	public static class MapParser
 	{
 		private enum FaceParseState
 		{
@@ -58,7 +58,7 @@ namespace MapParse
 			while (!done)
 			{
 				token = content[index];
-				if (token == '{')
+				if (token == Constants.LEFT_BRACE)
 				{
 					Entity entity = parseEntity(content, ref index);
 					map.Entities.Add(entity);
@@ -67,6 +67,7 @@ namespace MapParse
 				if (index == content.Length-1)
 				{
 					done = true;
+					break;
 				}
 
 				index++;
@@ -85,21 +86,26 @@ namespace MapParse
 			{
 				token = content[index];
 				
-				if (LookAhead(content, index) == '"')
+				if (LookAhead(content, index) == Constants.QUOTATION_MARK)
 				{
 					Property p = parseProperty(content, ref index);
 					entity.AddProperty(p);
+					index++;
+					continue;
 				}
 
-				if (LookAhead(content, index) == '{')
+				if (LookAhead(content, index) == Constants.LEFT_BRACE)
 				{
 					Brush b = parseBrush(content, ref index);
 					entity.Brushes.Add(b);
+					index++;
+					continue;
 				}
 
-				if (LookAhead(content, index) == '}')
+				if (LookAhead(content, index) == Constants.RIGHT_BRACE)
 				{
 					done = true;
+					break;
 				}
 				index++;
 			}
@@ -122,8 +128,9 @@ namespace MapParse
 
 				if (!parsing)
 				{
-					if (LookAhead(content, index) == '"')
+					if (LookAhead(content, index) == Constants.QUOTATION_MARK)
 					{
+						index++;
 						parsing = true;
 						sb.Clear();
 					}
@@ -131,7 +138,7 @@ namespace MapParse
 				else
 				{
 					sb.Append(token);
-					if (LookAhead(content, index) == '"')
+					if (LookAhead(content, index) == Constants.QUOTATION_MARK)
 					{
 						parsing = false;
 						if (!parsedKey)
@@ -144,6 +151,7 @@ namespace MapParse
 						{
 							p.Value = sb.ToString();
 							done = true;
+							break;
 						}
 					}
 				}
@@ -162,16 +170,18 @@ namespace MapParse
 			while (!done)
 			{
 				token = content[index];
+				char lookAhead = LookAhead(content, index);
 
 				if (!parsing)
 				{
-					if (LookAhead(content, index) == '(')
+					if (LookAhead(content, index) == Constants.LEFT_BRACE || token == Constants.SPACE)
 					{
 						parsing = true;
 					}
-					if (LookAhead(content, index) == '}')
+					if (LookAhead(content, index) == Constants.RIGHT_BRACE)
 					{
 						done = true;
+						break;
 					}
 				}
 				else
@@ -195,7 +205,7 @@ namespace MapParse
 				}
 			}
 
-			BrushUtil.CalculateAABB(ref b);
+			//BrushUtil.CalculateAABB(ref b);
 			return b;
 		}
 
@@ -214,6 +224,7 @@ namespace MapParse
 			while (!done)
 			{
 				token = content[index];
+				char lookAhead = LookAhead(content, index);
 
 				if (state == FaceParseState.PLANE)
 				{
@@ -230,16 +241,22 @@ namespace MapParse
 				}
 				else if (state == FaceParseState.TEXTURE)
 				{
-					if (LookAhead(content, index) != ' ')
+					if (token == Constants.SPACE)
+					{
+						index++;
+						continue;
+					}
+					if (LookAhead(content, index) == Constants.SPACE)
 					{
 						sb.Append(token);
-					}
-					else
-					{
 						// get ready to parse the texture axis
 						texture = sb.ToString();
 						sb.Clear();
 						state = FaceParseState.TEXAXIS;
+					}
+					else
+					{
+						sb.Append(token);
 					}
 				}
 				else if (state == FaceParseState.TEXAXIS)
@@ -257,7 +274,12 @@ namespace MapParse
 				}
 				else if (state == FaceParseState.ROTATION)
 				{
-					if (LookAhead(content, index) != ' ')
+					if (token == Constants.RIGHT_BRACKET)
+					{
+						index++;
+						continue;
+					}
+					if (LookAhead(content, index) != Constants.SPACE)
 					{
 						sb.Append(token);
 					}
@@ -270,7 +292,7 @@ namespace MapParse
 				}
 				else if (state == FaceParseState.SCALEX)
 				{
-					if (LookAhead(content, index) != ' ')
+					if (LookAhead(content, index) != Constants.SPACE)
 					{
 						sb.Append(token);
 					}
@@ -283,7 +305,7 @@ namespace MapParse
 				}
 				else if (state == FaceParseState.SCALEY)
 				{
-					if (LookAhead(content, index) != ' ')
+					if (LookAhead(content, index) != Constants.SPACE && LookAhead(content, index) != Constants.CARRAIGE_RETURN && LookAhead(content, index) != Constants.NEWLINE)
 					{
 						sb.Append(token);
 					}
@@ -292,6 +314,7 @@ namespace MapParse
 						scale[1] = float.Parse(sb.ToString());
 						sb.Clear();
 						done = true;
+						break;
 					}
 				}
 
@@ -314,22 +337,34 @@ namespace MapParse
 
 			PlaneParseState state = PlaneParseState.N_X;
 			bool done = false;
-			bool parsing = true;
+			bool parsing = false;
 			char token;
+			index++;
 			while (!done)
 			{
 				token = content[index];
+				char lookAhead = LookAhead(content, index);
 
 				if (!parsing)
 				{
-					if (LookAhead(content, index) == ']')
+					if (token == Constants.LEFT_BRACKET || LookAhead(content, index) == Constants.LEFT_BRACKET)
+					{
+						index++;
+						continue;
+					}
+					if (LookAhead(content, index) != Constants.SPACE)
+					{
+						parsing = true;
+					}
+					if (LookAhead(content, index) == Constants.RIGHT_BRACKET)
 					{
 						done = true;
+						break;
 					}
 				}
 				else
 				{
-					if (LookAhead(content, index) != ' ')
+					if (LookAhead(content, index) != Constants.SPACE)
 					{
 						sb.Append(token);
 					}
@@ -354,6 +389,7 @@ namespace MapParse
 								parsing = false;
 								break;
 						}
+						sb.Clear();
 					}
 				}
 				index++;
@@ -369,22 +405,33 @@ namespace MapParse
 			
 			Vec3ParseState state = Vec3ParseState.X;
 			bool done = false;
-			bool parsing = true;
+			bool parsing = false;
 			char token;
+			index++;
 			while (!done)
 			{
 				token = content[index];
+				char lookAhead = LookAhead(content, index);
 
 				if (!parsing)
 				{
-					if (LookAhead(content, index) == ')')
+					if (token == Constants.LEFT_PARENTHESIS || token == Constants.NEWLINE || token == Constants.CARRAIGE_RETURN || lookAhead == Constants.SPACE || lookAhead == Constants.LEFT_PARENTHESIS)
+					{
+						index++;
+						continue;
+					}
+					if (LookAhead(content, index) != Constants.SPACE)
+					{
+						parsing = true;
+					}
+					if (LookAhead(content, index) == Constants.RIGHT_PARENTHESIS)
 					{
 						done = true;
 					}
 				}
 				else
 				{
-					if (LookAhead(content, index) != ' ')
+					if (LookAhead(content, index) != Constants.SPACE)
 					{
 						sb.Append(token);
 					}
