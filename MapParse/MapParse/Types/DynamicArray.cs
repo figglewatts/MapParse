@@ -30,7 +30,11 @@ namespace MapParse.Types
 		/// </summary>
 		public void Add(T element)
 		{
-			T[] newArray = new T[Length + 1]; // maybe need to +2 here due to zero-indexing
+			T[] newArray = new T[Length + 1];
+			for (int i = 0; i < Length; i++)
+			{
+				newArray[i] = Elements[i];
+			}
 			newArray[Length] = element;
 			Elements = newArray;
 		}
