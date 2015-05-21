@@ -34,19 +34,16 @@ namespace MapParse.Types
 
 		public void Normalize()
 		{
-			double d = X * X + Y * Y + Z * Z;
+			double d = Magnitude();
 			
 			if (d == 1F || d == 0F)
 			{
 				return;
 			}
 
-			d = Math.Sqrt(d);
-			Vec3 v = this;
-			v /= d;
-			X = v.X;
-			Y = v.Y;
-			Z = v.Z;
+			X = X / d;
+			Y = Y / d;
+			Z = Z / d;
 		}
 		
 		public double Magnitude()

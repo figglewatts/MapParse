@@ -14,7 +14,7 @@ namespace MapParseTests
 	{
 		static void Main(string[] args)
 		{
-			MapParser.ParseMap(@"E:\Documents\Unity Stuff\LSD Revamped\LSD Revamped\Assets\Maps\dr_pi.map");
+			MapParser.ParseMap(@"E:\Documents\parsertest.map");
 
 			/*Vec3 intersection;
 

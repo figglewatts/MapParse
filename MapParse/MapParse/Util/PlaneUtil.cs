@@ -21,8 +21,11 @@ namespace MapParse.Util
 		/// <returns>The distance to the plane from the point.</returns>
 		public static double DistanceToPlane(Plane a, Vec3 b)
 		{
-			return (ParseUtils.RoundToSignificantDigits(a.Normal.Dot(b), 5) 
-				+ ParseUtils.RoundToSignificantDigits(a.Distance, 5));
+			double dist = a.Normal.Dot(b) + a.Distance;
+			///Console.WriteLine("Distance: " + dist);
+			///Console.WriteLine(a.ToString());
+			///Console.WriteLine(b.ToString());
+			return dist;
 		}
 		
 		// Calculate whether a point is in front of, behind, or on a plane
@@ -50,10 +53,8 @@ namespace MapParse.Util
 		public static bool GetIntersection(Plane a, Plane b, Plane c, out Vec3 intersection)
 		{
 			double denom = a.Normal.Dot(b.Normal.Cross(c.Normal));
-
 			if (Math.Abs(denom) < Constants.Epsilon)
 			{
-				//Console.WriteLine("Denom was zero." + denom);
 				intersection = new Vec3();
 				return false;
 			}

@@ -14,7 +14,7 @@ namespace MapParse.Util
 		/// <summary>
 		/// A value used for comparing floats. E.G. to determine if a float was equal to a value you'd see if it was within plus or minus Epsilon of the value.
 		/// </summary>
-		public const double Epsilon = 1e-5;
+		public const double Epsilon = 1E-15;
 
 		public const int NEWLINE = 0x0A;
 		public const int CARRAIGE_RETURN = 0x0D;

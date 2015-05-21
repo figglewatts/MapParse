@@ -75,7 +75,7 @@ namespace MapParse
 
 			return map;
 		}
-
+		
 		private static Entity parseEntity(string content, ref int index)
 		{
 			Entity entity = new Entity();
@@ -171,12 +171,13 @@ namespace MapParse
 			{
 				token = content[index];
 				char lookAhead = LookAhead(content, index);
-
+				
 				if (!parsing)
 				{
 					if (LookAhead(content, index) == Constants.LEFT_BRACE || token == Constants.SPACE)
 					{
 						parsing = true;
+						continue;
 					}
 					if (LookAhead(content, index) == Constants.RIGHT_BRACE)
 					{
@@ -407,7 +408,7 @@ namespace MapParse
 			bool done = false;
 			bool parsing = false;
 			char token;
-			index++;
+
 			while (!done)
 			{
 				token = content[index];
@@ -415,7 +416,8 @@ namespace MapParse
 
 				if (!parsing)
 				{
-					if (token == Constants.LEFT_PARENTHESIS || token == Constants.NEWLINE || token == Constants.CARRAIGE_RETURN || lookAhead == Constants.SPACE || lookAhead == Constants.LEFT_PARENTHESIS)
+					if (token == Constants.LEFT_PARENTHESIS || token == Constants.NEWLINE || token == Constants.CARRAIGE_RETURN || lookAhead == Constants.SPACE 
+						|| lookAhead == Constants.LEFT_PARENTHESIS || token == Constants.LEFT_BRACE)
 					{
 						index++;
 						continue;

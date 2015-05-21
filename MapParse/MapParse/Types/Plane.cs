@@ -28,9 +28,17 @@ namespace MapParse.Types
 
 		public Plane(Vec3 a, Vec3 b, Vec3 c)
 		{
-			this.Normal = (c - b).Cross(a - b);
+			Console.WriteLine("Calculating plane.");
+			this.Normal = (b - a).Cross(c - a);
+			Console.WriteLine("Normal pre normalize: " + this.Normal.ToString());
 			this.Normal.Normalize();
+			Console.WriteLine("Post normalize: " + this.Normal.ToString());
 			this.Distance = -this.Normal.Dot(a);
+			Console.WriteLine("A: " + a.ToString());
+			Console.WriteLine("B: " + b.ToString());
+			Console.WriteLine("C: " + c.ToString());
+			Console.WriteLine("D: " + this.Distance);
+			Console.WriteLine("\n\n\n");
 		}
 
 		public static bool operator== (Plane a, Plane b)
@@ -52,6 +60,11 @@ namespace MapParse.Types
 				return false;
 			}
 			return true;
+		}
+
+		public override string ToString()
+		{
+			return this.Normal.ToString() + ", D: " + this.Distance.ToString();
 		}
 	}
 }
