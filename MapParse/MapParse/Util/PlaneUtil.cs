@@ -21,17 +21,22 @@ namespace MapParse.Util
 		/// <returns>The distance to the plane from the point.</returns>
 		public static double DistanceToPlane(Plane a, Vec3 b)
 		{
-			double dist = a.Normal.Dot(b) + a.Distance;
-			///Console.WriteLine("Distance: " + dist);
-			///Console.WriteLine(a.ToString());
-			///Console.WriteLine(b.ToString());
+			//Console.WriteLine("Calculating distance to plane:");
+			//Console.WriteLine("Normal dot b: " + a.Normal.Dot(b));
+			//Console.WriteLine("Plane distance: " + a.Distance);
+			double dist = (a.Normal.Dot(b) + a.Distance);
+			//Console.WriteLine("Distance to plane: " + dist);
 			return dist;
 		}
 		
 		// Calculate whether a point is in front of, behind, or on a plane
 		public static PointClassification ClassifyPoint(Plane a, Vec3 b)
 		{
+			//Console.WriteLine("Attempting to classify point on plane:");
+			//Console.WriteLine(a.ToString());
+			//Console.WriteLine(b.ToString());
 			double distance = DistanceToPlane(a, b);
+			//Console.WriteLine(distance);
 			if (distance > Constants.Epsilon)
 			{
 				return PointClassification.FRONT;

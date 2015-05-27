@@ -16,15 +16,10 @@ namespace MapParseTests
 		{
 			MapParser.ParseMap(@"E:\Documents\parsertest.map");
 
-			/*Vec3 intersection;
+			/*Vec3 point = new Vec3(1, 0, 0);
+			Plane a = new Plane(new Vec3(1, 0, 0), -1);
 
-			Plane a = new Plane(new Vec3(1, 0, 0), 1);
-			Plane b = new Plane(new Vec3(0, 1, 0), 1);
-			Plane c = new Plane(new Vec3(0, 0, 1), 1);
-
-			PlaneUtil.GetIntersection(a, b, c, out intersection);
-
-			Console.WriteLine(intersection.ToString());*/
+			Console.WriteLine(PlaneUtil.ClassifyPoint(a, point).ToString());*/
 
 			Console.ReadLine();
 		}

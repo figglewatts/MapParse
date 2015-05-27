@@ -32,6 +32,12 @@ namespace MapParse.Types
 			return new Vec3(x, y, z);
 		}
 
+		public Vec3 Normalized()
+		{
+			double d = Magnitude();
+			return new Vec3(X / d, Y / d, Z / d);
+		}
+
 		public void Normalize()
 		{
 			double d = Magnitude();

@@ -22,11 +22,11 @@ namespace MapParse.Util
 			// hence the interesting looking for-loop.
 			// you see things like 'int j = i' because it reduces the possible intersections
 			// we need to take into account, as we don't want to process them more than once.
-			for (int i = 0; i < brush.NumberOfFaces; i++)
+			for (int i = 0; i < brush.NumberOfFaces-2; i++)
 			{
-				for (int j = 0; j < brush.NumberOfFaces; j++)
+				for (int j = i; j < brush.NumberOfFaces-1; j++)
 				{
-					for (int k = 0; k < brush.NumberOfFaces; k++)
+					for (int k = j; k < brush.NumberOfFaces; k++)
 					{
 						CalculateIntersection(brush, i, j, k);
 					}
@@ -51,7 +51,10 @@ namespace MapParse.Util
 						brush.Faces[i].Polys[0].Verts.Add(v);
 						brush.Faces[j].Polys[0].Verts.Add(v);
 						brush.Faces[k].Polys[0].Verts.Add(v);
+						Console.BackgroundColor = ConsoleColor.Green;
+						Console.ForegroundColor = ConsoleColor.Black;
 						Console.WriteLine("Added vertices");
+						Console.ResetColor();
 					}
 					else
 					{
