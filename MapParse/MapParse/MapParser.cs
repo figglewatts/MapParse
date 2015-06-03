@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using MapParse.Types;
 using MapParse.Util;
@@ -121,7 +120,7 @@ namespace MapParse
 			bool parsedKey = false;
 			bool parsing = false;
 			char token;
-			sb.Clear();
+			sb.Length = 0;
 			while (!done)
 			{
 				token = content[index];
@@ -132,7 +131,7 @@ namespace MapParse
 					{
 						index++;
 						parsing = true;
-						sb.Clear();
+						sb.Length = 0;
 					}
 				}
 				else
@@ -145,7 +144,7 @@ namespace MapParse
 						{
 							parsedKey = true;
 							p.Key = sb.ToString();
-							sb.Clear();
+							sb.Length = 0;
 						}
 						else
 						{
@@ -194,7 +193,7 @@ namespace MapParse
 				index++;
 			}
 
-			BrushUtil.GeneratePolys(b);
+			BrushUtil.GeneratePolys(ref b);
 			for (int i = 0; i < b.NumberOfFaces; i++)
 			{
 				for (int j = 0; j < b.Faces[i].Polys.Length; j++)
@@ -236,7 +235,7 @@ namespace MapParse
 						{
 							// we're at the end of the plane definition, so get ready to parse the texture
 							state = FaceParseState.TEXTURE;
-							sb.Clear();
+							sb.Length = 0;
 						}
 					}
 				}
@@ -252,7 +251,7 @@ namespace MapParse
 						sb.Append(token);
 						// get ready to parse the texture axis
 						texture = sb.ToString();
-						sb.Clear();
+						sb.Length = 0;
 						state = FaceParseState.TEXAXIS;
 					}
 					else
@@ -269,7 +268,7 @@ namespace MapParse
 						{
 							// get ready to parse texture rotation
 							state = FaceParseState.ROTATION;
-							sb.Clear();
+							sb.Length = 0;
 						}
 					}
 				}
@@ -287,7 +286,7 @@ namespace MapParse
 					else
 					{
 						rotation = float.Parse(sb.ToString());
-						sb.Clear();
+						sb.Length = 0;
 						state = FaceParseState.SCALEX;
 					}
 				}
@@ -300,7 +299,7 @@ namespace MapParse
 					else
 					{
 						scale[0] = float.Parse(sb.ToString());
-						sb.Clear();
+						sb.Length = 0;
 						state = FaceParseState.SCALEY;
 					}
 				}
@@ -313,7 +312,7 @@ namespace MapParse
 					else
 					{
 						scale[1] = float.Parse(sb.ToString());
-						sb.Clear();
+						sb.Length = 0;
 						done = true;
 						break;
 					}
@@ -334,7 +333,7 @@ namespace MapParse
 		{
 			Plane p = new Plane();
 
-			sb.Clear();
+			sb.Length = 0;
 
 			PlaneParseState state = PlaneParseState.N_X;
 			bool done = false;
@@ -390,7 +389,7 @@ namespace MapParse
 								parsing = false;
 								break;
 						}
-						sb.Clear();
+						sb.Length = 0;
 					}
 				}
 				index++;
@@ -402,7 +401,7 @@ namespace MapParse
 		{
 			Vec3 vec3 = new Vec3();
 
-			sb.Clear();
+			sb.Length = 0;
 			
 			Vec3ParseState state = Vec3ParseState.X;
 			bool done = false;
@@ -454,7 +453,7 @@ namespace MapParse
 								parsing = false;
 								break;
 						}
-						sb.Clear();
+						sb.Length = 0;
 					}
 				}
 				index++;

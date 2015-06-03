@@ -9,7 +9,7 @@ namespace MapParse.Util
 		/// <summary>
 		/// Iterate through the planes of the brushes faces and detect intersections to create vertices and polygons.
 		/// </summary>
-		public static void GeneratePolys(Brush brush)
+		public static void GeneratePolys(ref Brush brush)
 		{
 			// populate the brush's faces with polys
 			for (int faceI = 0; faceI < brush.NumberOfFaces; faceI++)
@@ -28,7 +28,7 @@ namespace MapParse.Util
 				{
 					for (int k = j; k < brush.NumberOfFaces; k++)
 					{
-						CalculateIntersection(brush, i, j, k);
+						CalculateIntersection(ref brush, i, j, k);
 					}
 				}
 			}
@@ -37,7 +37,7 @@ namespace MapParse.Util
 		/// <summary>
 		/// Calculates if there is an intersection between 3 planes and adds vertices to each if there is.
 		/// </summary>
-		private static void CalculateIntersection(Brush brush, int i, int j, int k)
+		private static void CalculateIntersection(ref Brush brush, int i, int j, int k)
 		{
 			// make sure we're not processing 2 or 3 of the same face
 			if (brush.Faces[i] != brush.Faces[j] && brush.Faces[i] != brush.Faces[k] && brush.Faces[j] != brush.Faces[k])
@@ -45,20 +45,20 @@ namespace MapParse.Util
 				Vec3 intersection;
 				if (PlaneUtil.GetIntersection(brush.Faces[i].P, brush.Faces[j].P, brush.Faces[k].P, out intersection))
 				{
-					if (PointInsideBrush(brush, intersection))
+					if (PointInsideBrush(ref brush, intersection))
 					{
 						Vertex v = new Vertex(intersection);
 						brush.Faces[i].Polys[0].Verts.Add(v);
 						brush.Faces[j].Polys[0].Verts.Add(v);
 						brush.Faces[k].Polys[0].Verts.Add(v);
-						Console.BackgroundColor = ConsoleColor.Green;
-						Console.ForegroundColor = ConsoleColor.Black;
-						Console.WriteLine("Added vertices");
-						Console.ResetColor();
+						//Console.BackgroundColor = ConsoleColor.Green;
+						//Console.ForegroundColor = ConsoleColor.Black;
+						//Console.WriteLine("Added vertices");
+						//Console.ResetColor();
 					}
 					else
 					{
-						Console.WriteLine("Nope.");
+						//Console.WriteLine("Nope.");
 					}
 				}
 			}
@@ -67,11 +67,11 @@ namespace MapParse.Util
 		/// <summary>
 		/// Returns true if the given point is inside the brush.
 		/// </summary>
-		public static bool PointInsideBrush(Brush b, Vec3 p)
+		public static bool PointInsideBrush(ref Brush b, Vec3 p)
 		{
 			for (int i = 0; i < b.NumberOfFaces; i++)
 			{
-				Console.WriteLine(PlaneUtil.ClassifyPoint(b.Faces[i].P, p).ToString());
+				//Console.WriteLine(PlaneUtil.ClassifyPoint(b.Faces[i].P, p).ToString());
 				if (PlaneUtil.ClassifyPoint(b.Faces[i].P, p) == PointClassification.FRONT)
 				{
 					return false;

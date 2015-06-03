@@ -5,27 +5,27 @@ namespace MapParse.Types
 {
 	public class Vec3
 	{
-		public double X { get; set; }
-		public double Y { get; set; }
-		public double Z { get; set; }
+		public float X { get; set; }
+		public float Y { get; set; }
+		public float Z { get; set; }
 
 		public Vec3() { }
 
-		public Vec3(double x, double y, double z)
+		public Vec3(float x, float y, float z)
 		{
 			X = x;
 			Y = y;
 			Z = z;
 		}
 
-		public double Dot(Vec3 v3)
+		public float Dot(Vec3 v3)
 		{
 			return (X * v3.X) + (Y * v3.Y) + (Z * v3.Z);
 		}
 
 		public Vec3 Cross(Vec3 v3)
 		{
-			double x, y, z;
+			float x, y, z;
 			x = Y * v3.Z - v3.Y * Z;
 			y = Z * v3.X - v3.Z * X;
 			z = X * v3.Y - v3.X * Y;
@@ -34,13 +34,13 @@ namespace MapParse.Types
 
 		public Vec3 Normalized()
 		{
-			double d = Magnitude();
+			float d = Magnitude();
 			return new Vec3(X / d, Y / d, Z / d);
 		}
 
 		public void Normalize()
 		{
-			double d = Magnitude();
+			float d = Magnitude();
 			
 			if (d == 1F || d == 0F)
 			{
@@ -52,9 +52,9 @@ namespace MapParse.Types
 			Z = Z / d;
 		}
 		
-		public double Magnitude()
+		public float Magnitude()
 		{
-			return Math.Sqrt(this.X * this.X + this.Y * this.Y + this.Z * this.Z);
+			return (float)Math.Sqrt(this.X * this.X + this.Y * this.Y + this.Z * this.Z);
 		}
 
 		public static Vec3 operator+ (Vec3 a, Vec3 b)
@@ -71,9 +71,17 @@ namespace MapParse.Types
 			return new Vec3() - a;
 		}
 		
-		public static Vec3 operator* (Vec3 a, double b)
+		public static Vec3 operator* (Vec3 a, float b)
 		{
 			return new Vec3(a.X * b, a.Y * b, a.Z * b);	
+		}
+		public static Vec3 operator* (float a, Vec3 b)
+		{
+			return b * a;
+		}
+		public static Vec3 operator* (Vec3 a, double b)
+		{
+			return new Vec3((float)(a.X * b), (float)(a.Y * b), (float)(a.Z * b));
 		}
 		public static Vec3 operator* (double a, Vec3 b)
 		{
@@ -84,9 +92,13 @@ namespace MapParse.Types
 			return new Vec3(a.X * b, a.Y * b, a.Z * b);
 		}
 
-		public static Vec3 operator/ (Vec3 a, double b)
+		public static Vec3 operator/ (Vec3 a, float b)
 		{
 			return new Vec3(a.X / b, a.Y / b, a.Z / b);
+		}
+		public static Vec3 operator/ (Vec3 a, double b)
+		{
+			return new Vec3((float)(a.X / b), (float)(a.Y / b), (float)(a.Z / b));
 		}
 		public static Vec3 operator/ (Vec3 a, int b)
 		{

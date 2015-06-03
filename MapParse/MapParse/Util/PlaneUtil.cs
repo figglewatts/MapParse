@@ -24,8 +24,9 @@ namespace MapParse.Util
 			//Console.WriteLine("Calculating distance to plane:");
 			//Console.WriteLine("Normal dot b: " + a.Normal.Dot(b));
 			//Console.WriteLine("Plane distance: " + a.Distance);
-			double dist = (a.Normal.Dot(b) + a.Distance);
+			//double dist = (a.Normal.Dot(b) - a.Distance);
 			//Console.WriteLine("Distance to plane: " + dist);
+			double dist = (a.Normal.Dot(b) + a.Distance) / a.Normal.Magnitude();
 			return dist;
 		}
 		
@@ -35,18 +36,27 @@ namespace MapParse.Util
 			//Console.WriteLine("Attempting to classify point on plane:");
 			//Console.WriteLine(a.ToString());
 			//Console.WriteLine(b.ToString());
-			double distance = DistanceToPlane(a, b);
+			double distance = -DistanceToPlane(a, b);
 			//Console.WriteLine(distance);
 			if (distance > Constants.Epsilon)
 			{
+				//Console.ForegroundColor = ConsoleColor.Red;
+				//Console.WriteLine("FRONT");
+				//Console.ResetColor();
 				return PointClassification.FRONT;
 			}
 			else if (distance < -Constants.Epsilon)
 			{
+				//Console.ForegroundColor = ConsoleColor.Green;
+				//Console.WriteLine("BACK");
+				//Console.ResetColor();
 				return PointClassification.BACK;
 			}
 			else
 			{
+				//Console.ForegroundColor = ConsoleColor.Green;
+				//Console.WriteLine("ON_PLANE");
+				//Console.ResetColor();
 				return PointClassification.ON_PLANE;	
 			}
 		}

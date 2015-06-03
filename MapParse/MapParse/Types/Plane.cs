@@ -5,6 +5,7 @@ namespace MapParse.Types
 {
 	/// <summary>
 	/// Plane class. Follows N dot P + D = 0 equation.
+	/// See "Hessian Normal Form".
 	/// </summary>
 	public class Plane
 	{
@@ -32,11 +33,11 @@ namespace MapParse.Types
 		public Plane(Vec3 a, Vec3 b, Vec3 c)
 		{
 			//Console.WriteLine("Calculating plane.");
-			this.Normal = (c - b).Cross(a - b);
+			this.Normal = (a - b).Cross(a - c);
 			//Console.WriteLine("Normal pre normalize: " + this.Normal.ToString());
-			this.Normal.Normalize();
+			//this.Normal.Normalize();
 			//Console.WriteLine("Post normalize: " + this.Normal.ToString());
-			this.Distance = this.Normal.Dot(a);
+			this.Distance = -this.Normal.Dot(a);
 			//Console.WriteLine("A: " + a.ToString());
 			//Console.WriteLine("B: " + b.ToString());
 			//Console.WriteLine("C: " + c.ToString());

@@ -237,7 +237,7 @@ namespace MapParse.Util
 				int smallest = -1;
 
 				a = p.Verts[i].P - center;
-				a.Normalize();
+				//a.Normalize();
 
 				plane = new Plane(p.Verts[i].P, center, center + p.P.Normal);
 				for (int j = i + 1; j < p.NumberOfVertices; j++)
@@ -248,7 +248,7 @@ namespace MapParse.Util
 						double angle;
 
 						b = p.Verts[j].P - center;
-						b.Normalize();
+						//b.Normalize();
 
 						angle = a.Dot(b);
 
@@ -262,7 +262,8 @@ namespace MapParse.Util
 
 				if (smallest == -1)
 				{
-					throw new MalformedPolyException("The polygon is malformed, as it has less than 3 vertices.");
+					//throw new MalformedPolyException("The polygon is malformed, as it has less than 3 vertices.");
+					return;
 				}
 
 				Vertex t = p.Verts[smallest];
@@ -272,15 +273,18 @@ namespace MapParse.Util
 
 			// check if vertex order needs to be reversed for back-facing polygon
 			Plane oldPlane = p.P;
-			CalculatePlane(ref p);
-			if (p.P.Normal.Dot(oldPlane.Normal) < 0)
+			if (CalculatePlane(ref p))
 			{
-				int j = p.NumberOfVertices-1;
-				for (int i = 0; i < j / 2; i++)
+				if (p.P.Normal.Dot(oldPlane.Normal) < 0)
 				{
-					Vertex v = p.Verts[i];
-					p.Verts[i] = p.Verts[j - i];
-					p.Verts[j - i] = v;
+					//Console.WriteLine("Reversing vertex order");
+					//int j = p.NumberOfVertices - 1;
+					//for (int i = 0; i < j / 2; i++)
+					//{
+						//Vertex v = p.Verts[i];
+						//p.Verts[i] = p.Verts[j - i];
+						//p.Verts[j - i] = v;
+					//}
 				}
 			}
 		}
@@ -294,7 +298,7 @@ namespace MapParse.Util
 			if (poly.NumberOfVertices < 3)
 			{
 				// throw exception because this is not a valid polygon
-				return false;
+				throw new MalformedPolyException("Polygon has less than 3 vertices, cannot create polygon plane.");
 			}
 			
 			Vec3 normal = new Vec3();
@@ -314,7 +318,6 @@ namespace MapParse.Util
 				centerOfMass.Z += poly.Verts[i].P.Z;
 			}
 			
-			// maybe use -Constants.Epsilon here
 			if (Math.Abs(poly.P.Normal.X) < Constants.Epsilon && Math.Abs(poly.P.Normal.Y) < Constants.Epsilon && Math.Abs(poly.P.Normal.Z) < Constants.Epsilon)
 			{
 				return false;
@@ -327,7 +330,7 @@ namespace MapParse.Util
 			centerOfMass = centerOfMass / poly.NumberOfVertices;
 			poly.P = new Plane(normal, -(centerOfMass.Dot(poly.P.Normal)));
 
-			poly.P.Normal.Normalize();
+			//poly.P.Normal.Normalize();
 			
 			return true;
 		}
