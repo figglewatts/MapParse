@@ -12,7 +12,8 @@ namespace MapParse.Util
 			p.Distance = 0;
 			return p;
 		}
-		
+
+		/*
 		/// <summary>
 		/// Calculate the distance to a plane from a Vec3
 		/// </summary>
@@ -101,6 +102,6 @@ namespace MapParse.Util
 			intersection = new Vertex(start + (direction * percentage));
 			percentage = percentage / (end - start).Magnitude();
 			return true;
-		}
+		}*/
 	}
 }

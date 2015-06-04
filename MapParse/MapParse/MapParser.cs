@@ -193,19 +193,19 @@ namespace MapParse
 				index++;
 			}
 
-			BrushUtil.GeneratePolys(ref b);
+			b.GeneratePolys();
 			for (int i = 0; i < b.NumberOfFaces; i++)
 			{
 				for (int j = 0; j < b.Faces[i].Polys.Length; j++)
 				{
 					Poly poly = b.Faces[i].Polys[j];
 					poly.P = b.Faces[i].P;
-					PolyUtil.SortVerticesClockwise(ref poly);
+					poly.SortVerticesCW();
 					b.Faces[i].Polys[j] = poly;
 				}
 			}
 
-			//BrushUtil.CalculateAABB(ref b);
+			//b.CalculateAABB();
 			return b;
 		}
 
@@ -377,11 +377,11 @@ namespace MapParse
 								state = PlaneParseState.N_Y;
 								break;
 							case PlaneParseState.N_Y:
-								p.Normal.Y = float.Parse(sb.ToString());
+								p.Normal.Z = float.Parse(sb.ToString());
 								state = PlaneParseState.N_Z;
 								break;
 							case PlaneParseState.N_Z:
-								p.Normal.Z = float.Parse(sb.ToString());
+								p.Normal.Y = float.Parse(sb.ToString());
 								state = PlaneParseState.DISTANCE;
 								break;
 							case PlaneParseState.DISTANCE:
@@ -445,11 +445,11 @@ namespace MapParse
 								state = Vec3ParseState.Y;
 								break;
 							case Vec3ParseState.Y:
-								vec3.Y = float.Parse(sb.ToString());
+								vec3.Z = float.Parse(sb.ToString());
 								state = Vec3ParseState.Z;
 								break;
 							case Vec3ParseState.Z:
-								vec3.Z = float.Parse(sb.ToString());
+								vec3.Y = float.Parse(sb.ToString());
 								parsing = false;
 								break;
 						}

@@ -6,6 +6,7 @@ namespace MapParse.Util
 {
 	public static class BrushUtil
 	{
+		/*
 		/// <summary>
 		/// Iterate through the planes of the brushes faces and detect intersections to create vertices and polygons.
 		/// </summary>
@@ -42,8 +43,8 @@ namespace MapParse.Util
 			// make sure we're not processing 2 or 3 of the same face
 			if (brush.Faces[i] != brush.Faces[j] && brush.Faces[i] != brush.Faces[k] && brush.Faces[j] != brush.Faces[k])
 			{
-				Vec3 intersection;
-				if (PlaneUtil.GetIntersection(brush.Faces[i].P, brush.Faces[j].P, brush.Faces[k].P, out intersection))
+				Vec3 intersection = Vec3.zero;
+				if (brush.Faces[i].P.GetIntersection(brush.Faces[j].P, brush.Faces[k].P, ref intersection))
 				{
 					if (PointInsideBrush(ref brush, intersection))
 					{
@@ -72,7 +73,7 @@ namespace MapParse.Util
 			for (int i = 0; i < b.NumberOfFaces; i++)
 			{
 				//Console.WriteLine(PlaneUtil.ClassifyPoint(b.Faces[i].P, p).ToString());
-				if (PlaneUtil.ClassifyPoint(b.Faces[i].P, p) == PointClassification.FRONT)
+				if (b.Faces[i].P.ClassifyPoint(p) == PointClassification.FRONT)
 				{
 					return false;
 				}
@@ -154,6 +155,6 @@ namespace MapParse.Util
 					}
 				}
 			}
-		}
+		}*/
 	}
 }

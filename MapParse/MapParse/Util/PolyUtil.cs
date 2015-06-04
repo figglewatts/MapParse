@@ -7,7 +7,7 @@ namespace MapParse.Util
 {
 	public static class PolyUtil
 	{
-		public static PolyClassification ClassifyPoly(Poly poly)
+		/*public static PolyClassification ClassifyPoly(Poly poly)
 		{
 			bool front = false;
 			bool back = false;
@@ -341,6 +341,6 @@ namespace MapParse.Util
 			_poly.Verts = poly.Verts;
 			_poly.P = poly.P;
 			return _poly;
-		}
+		}*/
 	}
 }
