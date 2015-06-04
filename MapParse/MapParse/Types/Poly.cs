@@ -24,7 +24,7 @@ namespace MapParse.Types
 		public Poly(int numberOfVertices)
 		{
 			this.Verts = new DynamicArray<Vertex>();
-			P = PlaneUtil.CreatePlane();
+			P = new Plane();
 		}
 		/// <summary>
 		/// Creates a poly with a set number of vertices along plane p.
