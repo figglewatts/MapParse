@@ -15,7 +15,7 @@ namespace MapParseTests
 		static void Main(string[] args)
 		{
 			Console.SetBufferSize(80, 500);
-			MapParser.ParseMap(@"E:\Documents\dr_bmc.map");
+			MapParser.ParseMap(@"E:\Documents\parsertest.map");
 
 			/*Vec3 point = new Vec3(0, 0, 0);
 			Plane a = new Plane(new Vec3(1, 0, 0), -1);

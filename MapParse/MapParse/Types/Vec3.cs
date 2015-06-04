@@ -9,6 +9,14 @@ namespace MapParse.Types
 		public float Y { get; set; }
 		public float Z { get; set; }
 
+		public static Vec3 zero
+		{
+			get
+			{
+				return new Vec3(0, 0, 0);
+			}
+		}
+
 		public Vec3() { }
 
 		public Vec3(float x, float y, float z)
@@ -23,6 +31,11 @@ namespace MapParse.Types
 			return (X * v3.X) + (Y * v3.Y) + (Z * v3.Z);
 		}
 
+		public static float Dot(Vec3 a, Vec3 b)
+		{
+			return a.Dot(b);
+		}
+
 		public Vec3 Cross(Vec3 v3)
 		{
 			float x, y, z;
@@ -30,6 +43,11 @@ namespace MapParse.Types
 			y = Z * v3.X - v3.Z * X;
 			z = X * v3.Y - v3.X * Y;
 			return new Vec3(x, y, z);
+		}
+
+		public static Vec3 Cross(Vec3 a, Vec3 b)
+		{
+			return a.Cross(b);
 		}
 
 		public Vec3 Normalized()
