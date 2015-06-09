@@ -202,8 +202,8 @@ namespace MapParse.Types
 				float u;
 				float v;
 
-				u = (((Verts[i].P.X * texAxis[0].Normal.X + Verts[i].P.Z * texAxis[0].Normal.Y + Verts[i].P.Y * texAxis[0].Normal.Z) / texWidth) / texScale[0]) + ((float)texAxis[0].Distance / texWidth);
-				v = (((Verts[i].P.X * texAxis[1].Normal.X + Verts[i].P.Z * texAxis[1].Normal.Y + Verts[i].P.Y * texAxis[1].Normal.Z) / texHeight) / texScale[1]) + ((float)texAxis[1].Distance / texHeight);
+				u = (((Verts[i].P.X * texAxis[0].Normal.X + Verts[i].P.Z * texAxis[0].Normal.Z + Verts[i].P.Y * texAxis[0].Normal.Y) / texWidth) / texScale[0]) + ((float)texAxis[0].Distance / texWidth);
+				v = (((Verts[i].P.X * texAxis[1].Normal.X + Verts[i].P.Z * texAxis[1].Normal.Z + Verts[i].P.Y * texAxis[1].Normal.Y) / texHeight) / texScale[1]) + ((float)texAxis[1].Distance / texHeight);
 
 				Verts[i].Tex[0] = u;
 				Verts[i].Tex[1] = v;
