@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Sam\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Sam\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_MapParse.349483019.00" t="ExcludeRecursive" />
+    <e p="D:\Documents\git-repos\MapParse\MapParse" t="IncludeFlat">
+      <e p="MapParse" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Exceptions" t="Include">
+          <e p="MalformedPolyException.cs" t="Include" />
+        </e>
+        <e p="MapParse.csproj" t="IncludeRecursive" />
+        <e p="MapParser.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Types" t="Include">
+          <e p="Brush.cs" t="Include" />
+          <e p="DynamicArray.cs" t="Include" />
+          <e p="Entity.cs" t="Include" />
+          <e p="Face.cs" t="Include" />
+          <e p="MapFile.cs" t="Include" />
+          <e p="Plane.cs" t="Include" />
+          <e p="PointClassification.cs" t="Include" />
+          <e p="Poly.cs" t="Include" />
+          <e p="PolyClassification.cs" t="Include" />
+          <e p="Property.cs" t="Include" />
+          <e p="Vec3.cs" t="Include" />
+          <e p="Vertex.cs" t="Include" />
+        </e>
+        <e p="Util" t="Include">
+          <e p="Constants.cs" t="Include" />
+          <e p="ParseUtil.cs" t="Include" />
+        </e>
+      </e>
+      <e p="MapParse.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
